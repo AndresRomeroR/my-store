@@ -5,11 +5,11 @@ const usersRouter = require('./users.router.js');
 const categoriesRouter = require('./categories.router.js');
 
 function routerApi(app) {
-  const router = express.router();
+  const router = express.Router();
   app.use('/api/v1',router); //EndPoint para versionamiento
-  app.use('/products', productRouter);
-  app.use('/users', usersRouter);
-  app.use('/categories', categoriesRouter);
+  router.use('/products', productRouter);
+  router.use('/users', usersRouter);
+  router.use('/categories', categoriesRouter);
 }
 
 module.exports = routerApi;
