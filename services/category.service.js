@@ -13,32 +13,48 @@ class CategoriesService {
       this.categories.push({
         id: faker.datatype.uuid(),
         name: faker.music.genre(),
-    });
-  }
-
+     });
+    }
   }
 
   create() {
-
+    const newCategory = {
+      id: faker.datatype.uuid(),
+      ...data
+    }
+    this.categories.push(newCategory);
+    return newCategory;
   }
 
   find() {
     return this.categories;
-
   }
 
   findOne(id) {
     return this.categories.find(item => item.id === id);
   }
 
-  update() {
-
+  update(id, changes) {
+    const index = this.categories.findIndex(item => item.id === id);
+    if(index === -1) {
+      throw new Error('Product not found');
+    }
+    const category = this.categories[index];
+    this.categories[index] = {
+      ...product,
+      ...changes
+    };
+    return this.categories[index];
   }
 
-  delete() {
-
+  delete(id) {
+    const index = this.categories.findIndex(item => item.id === id);
+    if(index === -1) {
+      throw new Error('Product not found');
+    }
+    this.categories.splice(index, 1);
+    return { id };
   }
-
 }
 
 module.exports = CategoriesService;
