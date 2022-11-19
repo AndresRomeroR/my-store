@@ -1,4 +1,5 @@
 const faker = require('faker');
+const boom = require('@hapi/boom');
 
 class UsersService {
 
@@ -16,13 +17,11 @@ class UsersService {
         email: faker.internet.email(),
         avatar: faker.image.avatar(),
         password: faker.internet.password(),
-        registeredAt: faker.date.past(),
-    });
+      });
+    }
   }
 
-  }
-
-  create() {
+  async create(data) {
     const newUser = {
       id: faker.datatype.uuid(),
       ...data
@@ -32,31 +31,41 @@ class UsersService {
   }
 
   find() {
-    return this.users;
-
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(this.users);
+      }, 3000);
+    })
   }
 
-  findOne(id) {
-    return this.users.find(item => item.id === id);
+  async findOne(id) {
+    const user = this.users.find(item => item.id === id);
+    if (!user) {
+      throw boom.notFound('User not found');
+    }
+    if (user.isBlock) {
+      throw boom.conflict('User is block');
+    }
+    return user;
   }
 
-  update(id, changes) {
+  async update(id, changes) {
     const index = this.users.findIndex(item => item.id === id);
     if(index === -1) {
-      throw new Error('Product not found');
+      throw new Error('User not found');
     }
-    const product = this.users[index];
+    const user = this.users[index];
     this.users[index] = {
-      ...product,
+      ...user,
       ...changes
     };
     return this.users[index];
   }
 
-  delete(id) {
+  async delete(id) {
     const index = this.users.findIndex(item => item.id === id);
     if(index === -1) {
-      throw new Error('Product not found');
+      throw boom.notFound('User not found');
     }
     this.users.splice(index, 1);
     return { id };
