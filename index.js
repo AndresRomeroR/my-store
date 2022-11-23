@@ -9,7 +9,7 @@ const port = 3030;
 
 app.use(express.json());
 
-const whitelist = ['http://localhost:8080'];
+const whitelist = ['http://localhost:8080', 'http://localhost:3030'];
 const options = {
   origin: (oirigin, callback) => {
     if(whitelist.includes(origin)) {
@@ -19,7 +19,8 @@ const options = {
     }
   }
 }
-app.use(cors(options));
+
+//app.use(cors(options)); unable to use
 
 app.get('/', (req, res) => {
   res.send('Hola server desde Express');
